@@ -1,32 +1,39 @@
-import React, { useState } from 'react'
-import { StatusBar, Image, Text, TouchableOpacity, SafeAreaView, StyleSheet, Platform } from 'react-native'
-import colors from '../../styles/colors'
+import React from 'react'
+import { StatusBar, Image, Text, TouchableOpacity, SafeAreaView, StyleSheet, Platform, Dimensions } from 'react-native'
+import { Feather } from '@expo/vector-icons'
 
+import fonts from '../../styles/fonts'
+import colors from '../../styles/colors'
 import wateringImg from '../assets/watering.png'
-import { Button } from '../components/Button'
+import { useNavigation } from '@react-navigation/core'
 
 export function Welcome() {
-  const [isVisible, setIsVisible] = useState(true)
- 
-  function toggleVisibility() {
-    setIsVisible(!isVisible)
-  }
+  const navigation = useNavigation()
 
+  function nextPage() {
+    navigation.navigate('UserIdentification')
+  }
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>
-        Gerencie {'\n'}
-        suas plantas {'\n'}
-        de forma fácil
+        Gerencie{'\n'}
+        suas plantas de{'\n'}
+        forma fácil
       </Text>
       
-      { isVisible && <Image source={wateringImg} style={styles.image}/> }
+      <Image
+        source={wateringImg}
+        style={styles.image}
+        resizeMode='contain'
+      />
 
       <Text style={styles.subtitle}>
         Não esqueça mais de regar suas plantas. Nós cuidamos de lembrar você sempre que precisar.
       </Text>
 
-      <Button title='>' onPress={toggleVisibility} />
+      <TouchableOpacity style={styles.button} activeOpacity={0.7} onPress={nextPage}>
+        <Feather name="chevron-right" style={styles.buttonIcon}/>
+      </TouchableOpacity>
     </SafeAreaView>
   )
 }
@@ -35,24 +42,38 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   title: {
+    fontFamily: fonts.heading,
     fontSize: 32,
-    fontWeight: 'bold',
     textAlign: 'center',
+    lineHeight: 38,
     color: colors.heading,
     marginTop: 38,
   },
   subtitle: {
-    textAlign: 'center',
+    fontFamily: fonts.text,
     fontSize: 18,
-    paddingHorizontal: 20,
+    textAlign: 'center',
+    marginHorizontal: 44,
     color: colors.heading,
   },
   image: {
-    width: 292,
-    height: 284,
+    height: Dimensions.get('window').width * 0.7,
   },
+  button: {
+    backgroundColor: colors.green,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 16,
+    marginBottom: 10,
+    height: 56,
+    width: 56,
+  },
+  buttonIcon: {
+    color: colors.white,
+    fontSize: 28,
+  }
 })
