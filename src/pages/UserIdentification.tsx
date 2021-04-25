@@ -28,13 +28,13 @@ export function UserIdentification() {
   }
 
   async function handleSubmit() {
-    if(!name) return Alert.alert('Precisamos saber como te chamar 😅')
+    if(!name) return Alert.alert('Precisamos saber como te chamar. 😅')
 
     try {
       await AsyncStorage.setItem('@plantmanager:user', name)
       navigation.navigate('Confirmation')
     } catch {
-      Alert.alert('Não foi possível salvar o seu nome 😢')
+      Alert.alert('Não foi possível salvar o seu nome. 😢')
     } 
   }
 
