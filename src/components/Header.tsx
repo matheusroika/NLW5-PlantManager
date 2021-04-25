@@ -1,14 +1,31 @@
-import React from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import React, { useEffect, useState } from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import colors from '../../styles/colors'
 import fonts from '../../styles/fonts'
 
-export function Header() {
+interface HeaderProps {
+  title?: string;
+  subtitle?: string;
+}
+
+export function Header({ title, subtitle }: HeaderProps) {
+  const [userName, setUserName] = useState<string>()
+
+  useEffect(() => {
+    async function getName() {
+      const user = await AsyncStorage.getItem('@plantmanager:user')
+      setUserName(user || '')
+    }
+
+    getName()
+  },[])
+
   return (
     <View style={styles.container}>
       <View>
-        <Text style={styles.hello}>Olá,</Text>
-        <Text style={styles.name}>Matheus</Text>
+        <Text style={styles.hello}>{title ? title : 'Olá,'}</Text>
+        <Text style={styles.name}>{subtitle ? subtitle : userName}</Text>
       </View>
       <Image source={{uri: 'https://github.com/matheusroika.png'}} style={styles.image}/>
     </View>
@@ -22,7 +39,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 20,
-    paddingHorizontal: 32,
   },
   hello: {
     fontFamily: fonts.complement,

@@ -1,33 +1,27 @@
+import { useNavigation } from '@react-navigation/core'
 import React, { useEffect, useState } from 'react'
 import { Platform, SafeAreaView, StatusBar, StyleSheet, Text, View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
+
 import colors from '../../styles/colors'
 import fonts from '../../styles/fonts'
+import api from '../services/api'
+
 import { Header } from '../components/Header'
 import { Loading } from '../components/Loading'
 import { PlantCard } from '../components/PlantCard'
 import { RoomSelectButton } from '../components/RoomSelectButton'
-import api from '../services/api'
+import { PlantProps } from '../libs/storage'
+
 
 interface RoomProps {
   key: string;
   title: string;
 }
 
-interface PlantProps {
-  id: number;
-  name: string;
-  about: string;
-  water_tips: string;
-  photo: string;
-  environments: [];
-  frequency: {
-    times: number;
-    repeat_every: string;
-  }
-}
-
 export function PlantSelect() {
+  const navigation = useNavigation()
+
   const [rooms, setRooms] = useState<RoomProps[]>([])
   const [plants, setPlants] = useState<PlantProps[]>([])
   const [filteredPlants, setFilteredPlants] = useState<PlantProps[]>([])
@@ -37,12 +31,14 @@ export function PlantSelect() {
 
   function handleRoomSelection(room: string) {
     setRoomSelected(room)
-
     if(room === 'all') return setFilteredPlants(plants)
     
     const filtered = plants.filter(plant => plant.environments.includes(room))
-
     setFilteredPlants(filtered)
+  }
+
+  function handlePlantSelection(plant: PlantProps) {
+    navigation.navigate("PlantSave", { plant })
   }
 
   useEffect(() => {
@@ -79,8 +75,8 @@ export function PlantSelect() {
   if (loadingRooms || loadingPlants) return <Loading />
   return (
     <SafeAreaView style={styles.container}>
-      <Header />
         <View style={styles.content}>
+          <Header />
           <Text style={styles.title}>Em qual ambiente</Text>
           <Text style={styles.subtitle}>você quer colocar sua planta?</Text>
         </View>
@@ -88,6 +84,7 @@ export function PlantSelect() {
         <View style={styles.buttonsContainer}>
           <FlatList
             data={rooms}
+            keyExtractor={item => String(item.key)}
             renderItem={({ item }) => (
               <RoomSelectButton
                 title={item.title}
@@ -105,8 +102,9 @@ export function PlantSelect() {
         <View style={styles.plantsContainer}>
           <FlatList
             data={filteredPlants}
+            keyExtractor={item => String(item.id)}
             renderItem={({ item }) => (
-              <PlantCard data={item}/>
+              <PlantCard data={item} onPress={() => handlePlantSelection(item)}/>
             )}
             showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}
@@ -123,7 +121,6 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
-
     backgroundColor: colors.background,
   },
   content: {
@@ -153,11 +150,11 @@ const styles = StyleSheet.create({
     paddingRight: 64,
   },
   plantsContainer: {
+    flex: 1,
     marginTop: 20,
     paddingHorizontal: 24,
   },
   plants: {
     marginTop: 20,
-    paddingBottom: 400,
   },
 })

@@ -6,7 +6,9 @@ import colors from '../../styles/colors'
 import { Welcome } from '../pages/Welcome'
 import { UserIdentification } from '../pages/UserIdentification'
 import { Confirmation } from '../pages/Confirmation'
-import { PlantSelect } from '../pages/PlantSelect'
+import { PlantSave } from '../pages/PlantSave'
+import { PlantsConfirmation } from '../pages/PlantsConfirmation'
+import TabRoutes from './tab.routes'
 
 const stack = createStackNavigator()
 
@@ -36,7 +38,22 @@ const StackRoutes: React.FC = () => (
 
     <stack.Screen
       name='PlantSelect'
-      component={PlantSelect}
+      component={TabRoutes}
+    />
+
+    <stack.Screen
+      name='PlantSave'
+      component={PlantSave}
+    />
+
+    <stack.Screen
+      name='PlantsConfirmation'
+      component={PlantsConfirmation}
+    />
+
+    <stack.Screen
+      name='MyPlants'
+      component={TabRoutes}
     />
 
   </stack.Navigator>
