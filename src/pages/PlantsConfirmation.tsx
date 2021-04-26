@@ -9,7 +9,7 @@ export function PlantsConfirmation() {
   const navigation = useNavigation()
 
   function handleConfirmation() {
-    navigation.navigate('Minhas plantinhas')
+    navigation.navigate('MyPlants')
   }
 
   return (

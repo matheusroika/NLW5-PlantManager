@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { StatusBar, Image, Text, TouchableOpacity, SafeAreaView, StyleSheet, Platform, Dimensions } from 'react-native'
 import { Feather } from '@expo/vector-icons'
 
@@ -6,13 +6,26 @@ import fonts from '../../styles/fonts'
 import colors from '../../styles/colors'
 import wateringImg from '../assets/watering.png'
 import { useNavigation } from '@react-navigation/core'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export function Welcome() {
   const navigation = useNavigation()
+  const [userName, setUserName] = useState<string>()
+
+  useEffect(() => {
+    async function getName() {
+      const user = await AsyncStorage.getItem('@plantmanager:user')
+      setUserName(user || '')
+      if (user) return navigation.navigate('MyPlants')
+    }
+
+    getName()
+  },[])
 
   function nextPage() {
     navigation.navigate('UserIdentification')
   }
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>
